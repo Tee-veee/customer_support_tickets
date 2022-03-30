@@ -1,12 +1,16 @@
 // REACT
-import { useState } from "react";
+import { useEffect, useState } from "react";
 // ASSETS
 import { FaSignInAlt } from "react-icons/fa";
 // TOAST
 import { toast } from "react-toastify";
+// ROUTER
+import { useNavigate } from "react-router-dom";
 // REDUX
 import { useSelector, useDispatch } from "react-redux";
-import { loginUser } from "../features/auth/authSlice";
+import { loginUser, reset } from "../features/auth/authSlice";
+// COMPONENTS
+import Spinner from "../components/Spinner";
 
 function Login() {
   const [formData, setFormData] = useState({
@@ -15,10 +19,26 @@ function Login() {
   });
 
   const { email, password } = formData;
+  const navigate = useNavigate();
   const dispatch = useDispatch();
+
   const { user, isLoading, isSuccess, isError, message } = useSelector(
     (state) => state.auth
   );
+
+  useEffect(() => {
+    if (isError) {
+      toast.error(message);
+    }
+
+    // redirect when logged in
+    if (isSuccess && user) {
+      toast.success("Succesfully logged in!");
+      navigate("/");
+    }
+
+    dispatch(reset());
+  }, [isError, isSuccess, user, message, navigate, dispatch]);
 
   const handleChange = (e) => {
     setFormData((prevState) => ({
@@ -37,6 +57,10 @@ function Login() {
 
     dispatch(loginUser(userData));
   };
+
+  if (isLoading) {
+    return <Spinner />;
+  }
 
   return (
     <div className="px-6 xl:px-[400px]">

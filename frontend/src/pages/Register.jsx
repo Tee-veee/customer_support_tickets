@@ -9,6 +9,8 @@ import { toast } from "react-toastify";
 // REDUX
 import { useSelector, useDispatch } from "react-redux";
 import { registerUser, reset } from "../features/auth/authSlice";
+// COMPONENTS
+import Spinner from "../components/Spinner";
 
 function Register() {
   const [formData, setFormData] = useState({
@@ -21,6 +23,7 @@ function Register() {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
   const { user, isError, isSuccess, isLoading, message } = useSelector(
     (state) => state.auth
   );
@@ -61,6 +64,10 @@ function Register() {
       dispatch(registerUser(userData));
     }
   };
+
+  if (isLoading) {
+    return <Spinner />;
+  }
 
   return (
     <div className="px-6 xl:px-[400px]">
