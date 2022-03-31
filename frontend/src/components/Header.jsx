@@ -30,7 +30,7 @@ function Header() {
           {user ? (
             <li>
               <button className="flex items-center" onClick={onLogout}>
-                <FaSignOutAlt />
+                <FaSignOutAlt className="text-3xl" />
                 <p>Logout</p>
               </button>
             </li>
